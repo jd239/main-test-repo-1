@@ -16,3 +16,8 @@ jobs:
       - name: Echo
         run: |
           node -v
+
+      - name: Should skip
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          node -v
