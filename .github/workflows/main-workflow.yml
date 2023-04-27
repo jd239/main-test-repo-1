@@ -1,6 +1,7 @@
 name: Main
 
-on: 
+on:
+  push:
   pull_request:
     types: [opened, reopened, edited, synchronize]
 
@@ -13,11 +14,15 @@ jobs:
         with:
           node-version: 16
 
-      - name: Echo
-        run: |
-          node -v
 
-      - name: Should skip
-        if: github.event.pull_request.head.repo.full_name == github.repository
+      - name: Echo
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+            echo "$GITHUB_CONTEXT"
+            echo ${{ github.repository }}
+
+      - name: Should skip if external
+        if: github.event.pull_request.head.repo.full_name == github.repository || !github.repository.fork
         run: |
           node -v
