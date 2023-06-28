@@ -2,6 +2,9 @@ name: Main
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'develop'
   pull_request:
     types: [opened, reopened, edited, synchronize]
 
@@ -22,7 +25,20 @@ jobs:
             echo "$GITHUB_CONTEXT"
             echo ${{ github.repository }}
 
-      - name: Should skip if external
-        if: github.event.pull_request.head.repo.full_name == github.repository
-        run: |
+  second:
+    name: 'Deploy'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Extract branch name
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
+    - name: Should skip if external
+      if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+      run: |
           node -v
+          echo ${{ steps.extract_branch.outputs.branch }}
