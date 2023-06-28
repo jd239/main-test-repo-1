@@ -22,7 +22,12 @@ jobs:
             echo "$GITHUB_CONTEXT"
             echo ${{ github.repository }}
 
+      - name: Extract branch name
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
       - name: Should skip if external
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'workflow_dispatch' }}
         run: |
-          node -v
+            node -v
+            echo ${{ steps.extract_branch.outputs.branch }}
