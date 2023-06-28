@@ -11,7 +11,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: browser-actions/setup-chrome@latest
       - name: Create PR
         run: |
           echo 'version=1.1.0' >> $GITHUB_ENV
@@ -22,7 +21,7 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"\
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/jd239/main-test-repo-1/pulls \
-          -d '{"title":"Develop -> Main","body":"${{ env.VERSION }}","head":"jd239:develop","base":"main"}'
+          -d '{"title":"Develop -> Main","body":"${{ env.VERSION }}","head":"develop","base":"main"}'
       # - name: Create develop -> main PR
       #   uses: peter-evans/create-pull-request@v5
       #   with:
