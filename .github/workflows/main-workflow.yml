@@ -2,6 +2,9 @@ name: Main
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'develop'
   pull_request:
     types: [opened, reopened, edited, synchronize]
 
